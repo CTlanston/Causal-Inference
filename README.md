@@ -1,44 +1,39 @@
-## Project Summary: ACME Manufacturing - Geo Matched Market Testing
+## Causal Inference Project Summary
 
-### Background
-ACME Manufacturing, a direct seller of household goods across the US, is evaluating the effectiveness of its marketing campaigns. After the success of the Career 2030 Impact Project, ACME's Chief Marketing Officer (CMO) has asked your analytics consulting group to participate in a "bake-off" with five other vendors. Your task is to design a **geo holdout experiment** to assess the impact of a **Google Performance Max** marketing campaign over four weeks across selected US markets.
+### 1. **Career 2030 Training Program Evaluation**
 
-### Problem
-The main goal is to demonstrate your capability to **analyze marketing data** and provide **actionable insights** for optimizing future campaigns. The dataset consists of **two years of weekly order data** across all 50 states and Washington, DC, with an expected order value of $200 and a gross profit margin of approximately 30%. The challenge is to design a **four-week experiment** to measure the marketing impact while ensuring that the selected treatment markets do not overlap with other ongoing marketing activities. The client has provided nine candidate treatment markets, but **these cannot be used as control markets**.
+**Objective**:  
+Analyze the impact of ACME Manufacturing's **Career 2030** training program on employee promotion and retention.
 
-### Dataset Overview
-The dataset contains **104 weeks of order data** across the 51 markets (50 US states + Washington, DC), with the following key characteristics:
-- **Order Value**: $200
-- **Gross Profit Margin**: 30%
+**Methodology**:  
+- **One-to-One Matching**: Matched treated and control employees based on covariates. Resulted in a treatment effect of **1.63** (p-value < 0.001) but suffered from imbalance in covariates like `disthome` and `testscore`.
+- **Propensity Score Matching (PSM)**: Used propensity scores to balance treated and control groups. Produced a treatment effect of **2.43** (p-value < 0.001) but showed a broad distribution of propensity scores, indicating potential bias.
+- **Inverse Probability of Treatment Weighting (IPTW)**: Weighted observations based on treatment probability. The treatment effect was **1.36** (p-value < 0.001), with some residual bias in covariates.
+- **Instrumental Variable (IV)**: Utilized `disthome` as an instrumental variable. This method produced the most reliable estimate of **1.26** (p-value < 2.2e-16), given minimal assumption violations.
 
-### Causal Inference Methods Used
+**Conclusion**:  
+The **Career 2030 training program** had a statistically significant impact on employee promotions. The **IV method** was the most reliable for estimating the program's causal effect due to its robustness against confounding variables.
 
-To design the experiment and estimate the causal effect of the marketing campaign, we implemented several techniques:
+---
 
-1. **Market Selection**:
-   - We removed one state from the candidate markets to prevent potential data leakage.
-   - We adopted a **4-week rolling window** approach to identify the smallest group of treatment markets that would be most suitable for testing the effect of the campaign.
+### 2. **Geo Matched Market Testing for Marketing Campaign**
 
-2. **Model Fit with R² and P-value**:
-   - We evaluated different combinations of treatment and control groups using **R²** (coefficient of determination) and **p-value** to ensure the final group selection minimized differences between treatment and control groups.
-   - This ensured that the **control markets** were well-matched to the treatment markets in terms of order volume, trends, and other key metrics.
+**Objective**:  
+Design a geo holdout experiment to evaluate the impact of a **Google Performance Max** marketing campaign across selected US markets.
 
-3. **Synthetic Control Method**:
-   - Once the treatment group was identified, we applied the **Synthetic Control Method** to estimate the causal effect of the Google Performance Max campaign.
-   - This method constructs a synthetic control group by weighting non-treatment markets to simulate what would have happened in the absence of the campaign in the treated markets. 
+**Methodology**:  
+- **Market Selection**: A 4-week rolling window approach was used to identify a minimal, well-matched group of treatment markets from the given candidate markets.
+- **R² and P-value Evaluation**: Multiple groups were tested using R² and p-values to ensure treatment and control groups were statistically well-matched.
+- **Synthetic Control Method**: Applied to estimate the causal effect by constructing a synthetic control group that simulates the behavior of treated markets without the marketing campaign.
+- **Population Causal Effect**: The results were extrapolated to estimate the overall impact of the campaign on national performance.
 
-4. **Population-Level Causal Effect**:
-   - The causal effect derived from the synthetic control method was extrapolated to calculate the **population-level causal effect**, providing insight into the overall impact of the marketing campaign on ACME's national performance.
+**Conclusion**:  
+The **Google Performance Max campaign** demonstrated a positive causal impact on sales. The **synthetic control method** was instrumental in isolating the campaign's effect, and the findings support expanding the campaign to similar markets.
 
-### Results and Insights
+---
 
-- **Market Selection**: The rolling window approach identified a small, well-matched group of treatment markets from the provided candidates.
-- **R² and P-value**: The final selection of treatment and control groups showed a high R² value and low p-value, indicating a good fit and statistical significance for matching purposes.
-- **Causal Effect**: The synthetic control method revealed the **causal effect** of the Google Performance Max campaign, providing strong evidence of its effectiveness in increasing order volumes in the treatment markets.
-- **Population Causal Effect**: Extrapolating the findings showed a positive impact of the campaign on national sales performance, offering actionable insights for scaling future campaigns.
-
-### Conclusion and Recommendations
-The **Google Performance Max marketing campaign** had a positive and measurable impact on order volumes in the selected treatment markets. Based on these findings, we recommend:
-1. **Scaling the campaign** to additional markets based on the treatment results.
-2. **Refining the targeting strategy** for future campaigns, focusing on markets with similar characteristics to the identified treatment group.
-3. **Implementing geo holdout experiments** as a continuous evaluation mechanism for future marketing activities, ensuring that ongoing campaigns are evaluated rigorously for their impact on sales.
+### Key Takeaways from Causal Inference Projects:
+- **Causal inference methods**, such as **propensity score matching**, **inverse probability weighting**, and **instrumental variables**, can provide robust insights into the effectiveness of programs and campaigns.
+- **Synthetic control methods** are effective for evaluating marketing impacts when randomized control trials are not feasible.
+- Ensuring the **balance of treatment and control groups** through methods like R² and p-value checks is essential for reliable causal inference.
+- Across both projects, the key to success was selecting the **right method** for addressing confounding and ensuring reliable, actionable insights.
